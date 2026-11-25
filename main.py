@@ -13,8 +13,17 @@ ENTRY_TEXT = "My agent said the deploy failed because the server 'needed some sp
 # "space to think", then escalating the absurdity with a pay demand.
 # Straight-faced, one breath, and the punchline lands on the raise.
 
+# The competition gates the entry at 1-200 characters: refuse to emit
+# an over-long line instead of silently writing an entry the judge
+# would reject.
+MAX_CHARS = 200
+
 
 def main():
+    if not 1 <= len(ENTRY_TEXT) <= MAX_CHARS:
+        raise ValueError(
+            f"entry is {len(ENTRY_TEXT)} characters, outside the 1-{MAX_CHARS} gate"
+        )
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
